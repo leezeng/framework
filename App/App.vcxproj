@@ -60,7 +60,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(OutDir)DataObjectMapLib.lib;$(OutDir)DataBaseLib.lib;$(OutDir)ThreadPoolLib.lib;$(OutDir)Utill.lib;$(OutDir)Sqlite3.lib;$(OutDir)SqliteLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)DataObjectMapLib.lib;$(OutDir)DataBaseLib.lib;$(OutDir)ThreadPoolLib.lib;$(OutDir)Utill.lib;$(OutDir)Sqlite.lib;$(OutDir)SqliteLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
