@@ -70,11 +70,11 @@ bool CSqliteDBOperation::ExecQuery( CDBDataObject* pDbDataObject )
 	  {
 		  const char* fieldName=pQuery->fieldName(i);
 		  string str(fieldName);
-		  wstring wstr= CUtill::ANSIToUnicode(str);
 		  CString cstr;
-		  cstr.Format(_T("%s"),wstr);
+		  cstr=str.c_str();
+		 
 		  E_DB_TYPE eType= pDBObject->GetFileType(cstr);
-	     
+	      
 	  }
 	  pQuery->nextRow();
 	}
