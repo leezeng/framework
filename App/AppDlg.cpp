@@ -91,11 +91,22 @@ HCURSOR CAppDlg::OnQueryDragIcon()
 #include "DBSqlite.h"
 #include "SqliteDBOperation.h"
 #include "TestTable.h"
+#include <algorithm>
 void CAppDlg::OnBnClickedOk()
 {
-	CDBOperation* pOperation=new CSqliteDBOperation;
-	pOperation->openFile(_T("test.db"));
+	CSqliteDBOperation sqlOperation;
+	sqlOperation.openFile(_T("test.db"));
+	
+	vector<CDBDataObject*> vecObject;
+	sqlOperation.ExecQuery(vecObject,"CTestTable");
+	std::for_each(vecObject.begin(),vecObject.end(),[](CDBDataObject*& p){
+		delete p;
+		p=nullptr;
+	});
+	vecObject.clear();
+	
 	CTestTable testTable;
-	pOperation->ExecQuery(&testTable);
+	testTable.SetOperatorType(DB_SELECT);
+	sqlOperation.ExecteSqlByPrimaryKey(&testTable);
 
 }

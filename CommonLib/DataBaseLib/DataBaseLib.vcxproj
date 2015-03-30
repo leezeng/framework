@@ -118,6 +118,7 @@
   <ItemGroup>
     <ClInclude Include="DBBase.h" />
     <ClInclude Include="DBDataObject.h" />
+    <ClInclude Include="DBDefined.h" />
     <ClInclude Include="DBOperation.h" />
     <ClInclude Include="DBQueryBase.h" />
     <ClInclude Include="stdafx.h" />

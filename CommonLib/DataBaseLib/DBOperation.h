@@ -3,6 +3,8 @@
 #include "Operation.h"
 #include "DBBase.h"
 #include "DataObject.h"
+#include <vector>
+using std::vector;
 class __declspec(dllexport)  CDBOperation:public COperation
 {
 public:
@@ -12,7 +14,6 @@ public:
 	virtual bool closeFile()=0;
 	virtual bool ExecQuery()=0;
 	virtual bool CompileStatement(const wchar_t* pchSQL)=0;
-	virtual bool ExecQuery(CDBDataObject* pDbDataObject)=0;
 	virtual bool select(CDataObject* dataObject)=0;
 	virtual bool insert(CDataObject* dataObject)=0;
 protected:

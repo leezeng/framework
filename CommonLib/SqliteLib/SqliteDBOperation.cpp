@@ -46,9 +46,8 @@ bool CSqliteDBOperation::ExecQuery()
 	return false;
 }
 
-bool CSqliteDBOperation::ExecQuery( CDBDataObject* pDbDataObject )
+bool CSqliteDBOperation::ExecQuery( vector<CDBDataObject*>& vecDBobject,const char* pChClassName)
 {
-	pDbDataObject->ReflectFieldEx();
 	TCHAR* pChSql=_T("select * from TestTable");
 	CDBQueryBase* pQuery=nullptr;
 	pQuery=m_pDbBase->execQuery(CUtill::UnicodeToANSI(pChSql).c_str());
@@ -59,8 +58,8 @@ bool CSqliteDBOperation::ExecQuery( CDBDataObject* pDbDataObject )
 	}
 	while(!pQuery->eof())
 	{
-	  CDBDataObject* pDBObject=(CDBDataObject*)CDBDataObject::GetInstance("CTestTable");
-	  pDBObject->ReflectFieldEx();
+	  CDBDataObject* pDBObject=(CDBDataObject*)CDBDataObject::GetInstance(pChClassName);
+	  pDBObject->SetFieldAllEx(true);
 	  if (pDBObject==NULL)
 	  {
 		  pQuery->finalize();
@@ -69,16 +68,22 @@ bool CSqliteDBOperation::ExecQuery( CDBDataObject* pDbDataObject )
 	  for (int i=0;i<pQuery->numFields();i++)
 	  {
 		  const char* fieldName=pQuery->fieldName(i);
-		  string str(fieldName);
-		  CString cstr;
-		  cstr=str.c_str();
-		 
-		  E_DB_TYPE eType= pDBObject->GetFileType(cstr);
-	      
+		  E_DB_TYPE eType= pDBObject->GetFiledType(fieldName);
+		  //获得在ReflectFieldEx的时候绑定的类成员指针void*。
+		  void* pVoid=pDBObject->GetFiledValue(fieldName);
+		  //从数据库查询到值，并将值给void*
+		  pQuery->GetValue(i,eType,pVoid);
 	  }
+	  vecDBobject.push_back(pDBObject);
+	  pDBObject->UnSetFieldAllEx();
 	  pQuery->nextRow();
 	}
+	pQuery->finalize();
+	return true;
+}
 
+bool CSqliteDBOperation::ExecQuery( CDBDataObject* pDbDataObject )
+{
 	return true;
 }
 
@@ -93,4 +98,16 @@ bool CSqliteDBOperation::CompileStatement( const TCHAR* pchSQL )
 
 
 	return true;
+}
+
+bool CSqliteDBOperation::ExecteSqlByPrimaryKey( CDBDataObject* pDBObject )
+{
+	if (nullptr==pDBObject)
+	{
+		return false;
+	}
+	pDBObject->SetFieldAllEx(true);
+	list<string> lstStrSql;
+	pDBObject->GetSqlStr(lstStrSql,this);
+	return false;
 }

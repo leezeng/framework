@@ -1,4 +1,5 @@
 #pragma once
+#include "DBDefined.h"
 class __declspec(dllexport) CDBQueryBase
 {
 public:
@@ -25,4 +26,5 @@ public:
 	virtual bool eof() = 0;
 	virtual void nextRow() = 0;
 	virtual void finalize() = 0;
+	virtual void GetValue(int nIndex,E_DB_TYPE eType,void* pVoid)=0;
 };

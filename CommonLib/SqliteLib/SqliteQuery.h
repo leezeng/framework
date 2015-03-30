@@ -1,6 +1,10 @@
 #pragma once
+
 #include "DBQueryBase.h"
 #include "sqlite3.h"
+#include "Utill.h"
+#include <string>
+using std::string;
 class __declspec(dllexport) CSqliteQuery:public CDBQueryBase
 {
 public:
@@ -28,7 +32,7 @@ public:
 	virtual bool eof();
 	virtual void nextRow();
 	virtual void finalize();
-
+	virtual void GetValue(int nIndex,E_DB_TYPE eType,void* pVoid);
 private:
 	sqlite3* m_pDB;
 	sqlite3_stmt* m_pVM;

@@ -52,5 +52,8 @@
     <ClInclude Include="DBOperation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DBDefined.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

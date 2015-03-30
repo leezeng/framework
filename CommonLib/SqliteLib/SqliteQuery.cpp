@@ -42,7 +42,7 @@ const char* CSqliteQuery::fieldDeclType( int nCol )
 
 int CSqliteQuery::fieldDataType( int nCol )
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return sqlite3_column_type(m_pVM,nCol);
 }
 
 const char* CSqliteQuery::fieldValue( int nField )
@@ -57,7 +57,7 @@ const char* CSqliteQuery::fieldValue( const char* szField )
 
 int CSqliteQuery::getIntField( int nField, int nNullValue/*=0*/ )
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return sqlite3_column_int(m_pVM,nField);
 }
 
 int CSqliteQuery::getIntField( const char* szField, int nNullValue/*=0*/ )
@@ -66,13 +66,13 @@ int CSqliteQuery::getIntField( const char* szField, int nNullValue/*=0*/ )
 }
 
 long CSqliteQuery::getInt64Field( int nField, int nNullValue /*= 0*/ )
-{
-	throw std::logic_error("The method or operation is not implemented.");
+{ 
+	return (long)sqlite3_column_int64(m_pVM,nField);
 }
 
 double CSqliteQuery::getFloatField( int nField, double fNullValue/*=0.0*/ )
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return sqlite3_column_double(m_pVM,nField);
 }
 
 double CSqliteQuery::getFloatField( const char* szField, double fNullValue/*=0.0*/ )
@@ -82,7 +82,7 @@ double CSqliteQuery::getFloatField( const char* szField, double fNullValue/*=0.0
 
 const char* CSqliteQuery::getStringField( int nField, const char* szNullValue/*=""*/ )
 {
-	throw std::logic_error("The method or operation is not implemented.");
+	return (const char*)sqlite3_column_text(m_pVM,nField);
 }
 
 const char* CSqliteQuery::getStringField( const char* szField, const char* szNullValue/*=""*/ )
@@ -128,12 +128,66 @@ void CSqliteQuery::nextRow()
 	}
 	else
 	{
-		nRet-sqlite3_finalize(m_pVM);
+		nRet=sqlite3_finalize(m_pVM);
 	}
 }
 
 void CSqliteQuery::finalize()
 {
 	sqlite3_finalize(m_pVM);
+}
+
+void CSqliteQuery::GetValue( int nIndex,E_DB_TYPE eType,void* pVoid)
+{
+	if (nullptr==pVoid)
+	{
+		return;
+	}
+	int nType=fieldDataType(nIndex);
+	switch (nType)
+	{
+	case SQLITE_INTEGER:
+		{
+			switch(eType)
+			{
+			case DB_TYPE_INT32:
+				*((INT32*)(pVoid))=getIntField(nIndex);
+				break;
+			case DB_TYPE_INT64:
+				*((INT64*)(pVoid))=getIntField(nIndex);
+				break;
+			}
+		}
+	case SQLITE_FLOAT:
+		{
+			switch(eType)
+			{
+			case  DB_TYPE_DOUBLE:
+				*((double*)(pVoid))=getFloatField(nIndex);
+				break;
+			}
+		}
+		break;
+	case SQLITE_BLOB:
+		{
+			switch(eType)
+			{
+			case DB_TYPE_BLOB:
+				break;
+			}
+		}
+	case SQLITE_TEXT:
+		{
+			switch(eType)
+			{
+			case DB_TYPE_CHAR:
+				break;
+			case DB_TYPE_STRING:
+				*((CString*)(pVoid))=CString(CUtill::ANSIToUnicode(getStringField(nIndex)).c_str());
+				break;
+			}
+		}
+		break;
+	}
 }
 

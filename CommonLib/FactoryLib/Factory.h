@@ -8,13 +8,16 @@ using std::string;
 #define DECLARE_FACTORYCLASS(CLASS) static CLASS *createInstance() { return new CLASS; }
 class CFactoryObject;
 typedef CFactoryObject* (*Func)();
-static map<string,Func> g_MapFunc;
+
 
 class __declspec(dllexport) CFactoryObject
 {
+	typedef map<string,Func> MapFunction; 
 public:
 	CFactoryObject();
 	virtual ~CFactoryObject();
+	void RelaseInstance();
 	static CFactoryObject* GetInstance(const char* chClassName);
 	static bool Register(const char* chClassName,Func pFunc);
+	static MapFunction * m_MapFunc;
 };

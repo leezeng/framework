@@ -1,24 +1,19 @@
 #pragma once
+#include "DBDefined.h"
 #include "DataObject.h"
 #include <list>
+#include <string>
+#include <map>
+class CDBOperation;
+using std::map;
+using std::string;
 using std::list;
 using std::pair;
-enum E_DB_TYPE
-{
-	DB_TYPE_INT32=0,
-	DB_TYPE_INT64,
-	DB_TYPE_DOUBLE,
-	DB_TYPE_CHAR,
-	DB_TYPE_TIME,
-	DB_TYPE_STRING,
-	DB_TYPE_BOOL,
-	DB_TYPE_BLOB,
-	DB_TYPE_NULL
-};
+
 typedef struct STRUCT_DB_FIELD_INFO
 {
-	CString strTableName;
-	CString strField;
+	string strTableName;
+	string strField;
 	void* pvData;
 	bool bFlag;
 	int nDataLen;
@@ -27,26 +22,47 @@ typedef struct STRUCT_DB_FIELD_INFO
 	bool bPk;
 	bool bXmlData;
 }DB_FIELD_INFO,*PDB_FIELD_INFO;
+
 class __declspec(dllexport) CDBDataObject:public CDataObject
 {
 private:
-	CString m_strClassName;
-	map<CString, PDB_FIELD_INFO> *m_pclsTableInfoMap; //table
-	list<map<CString,void*>> *m_pRowDataList; //row
-	bool HasReflectTableInfoMap();
+	bool HasReflectMap();
+	void DeleteReflectMap();
+	void GetConditionList(map<string,string>& pPkMap);
+
+	/*PDB_FIELD_INFO GetBeginDBFiledInfo();
+	PDB_FIELD_INFO GetNextDBFiledInfo();
+	PDB_FIELD_INFO GetFirstDBFiledInfo();*/
+
 public:
+	const char* GetClassName();
 	CDBDataObject(bool bIsAddToMap);
 	~CDBDataObject(void);
-	bool ReflectTableInfoMap(int nIndex,CString strTableName,CString strField,E_DB_TYPE eType,void *pvData,bool bXmlData);
-	bool SetFieldAllEx(BOOL bDBData=TRUE);
-	BOOL UnSetFieldAllEx();
-	virtual void ClearReflect();
-	virtual void ReflectFieldEx();
-	virtual void RegiestFieldEx();
-	virtual void RegiestXMLFieldEx();
-	virtual bool UnRegiestFieldEx();
- 	E_DB_TYPE GetFileType(const CString& strName);
+	bool ReflectTableInfoMap(int nIndex,string strTableName,string strField,E_DB_TYPE eType,void *pvData,bool bIsPk,bool bXmlData);
+	/************************************************************************/
+	/* 支持XML和DB                                                                     */
+	/************************************************************************/
+	bool SetFieldAllEx(bool bIsDbData);
+	void UnSetFieldAllEx();
+	E_DB_TYPE GetFiledType(const string& strName);
+	void* GetFiledValue(const string& strName);
+
+	void GetSqlStr(list<string>& lstStrSql,CDBOperation* pOperation);
+	void SetOperatorType(E_OPERATOR_TYPE eOperType);
+
+	//受保护继承，不能在外面提供直接的访问，只能通过SetFiledAllEx。UnSetFileAllEx。访问。只能在继承类里面操作。
+protected:
+	virtual void ReflectDBField();
+	virtual void ReflectDBFieldEx();
+	virtual bool UnReflectDBFieldEx();
+	virtual void ReflectXMLField();
+	void ClearReflect();
+protected:
+	string m_strClassName;
 private:
+	map<string, PDB_FIELD_INFO> *m_pclsTableInfoMap; //table
+	list<map<string,void*>> *m_pRowDataList; //row
 	int m_nCount;
+	E_OPERATOR_TYPE m_eOperType;
 };
 
