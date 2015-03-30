@@ -26,3 +26,10 @@
 *.exe
 *.out
 *.app
+
+# visual studio support files
+*.sdf
+
+#untracked directory
+output/
+ipch/
