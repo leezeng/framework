@@ -11,19 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{56823BA6-EE70-4D3A-A609-C2D69365BB24}</ProjectGuid>
-    <RootNamespace>App</RootNamespace>
-    <Keyword>MFCProj</Keyword>
+    <ProjectGuid>{79F1DA74-6D90-479A-85D5-375ED706C816}</ProjectGuid>
+    <RootNamespace>NotifyLib</RootNamespace>
+    <Keyword>MFCDLLProj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>Dynamic</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
@@ -46,25 +46,22 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(FrameworkBuild)\Output\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(FrameworkBuild)\Output\Obj\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Include\Common;..\CommonLib\Sqlite;..\CommonLib\SqliteLib;..\CommonLib\DataBaseLib;..\CommonLib\DataObjectMapLib;..\CommonLib\FactoryLib;..\CommonLib\Utill;..\CommonLib\NotifyLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\Include\Common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(OutDir)DataObjectMapLib.lib;$(OutDir)DataBaseLib.lib;$(OutDir)ThreadPoolLib.lib;$(OutDir)Utill.lib;$(OutDir)Sqlite.lib;$(OutDir)SqliteLib.lib;$(OutDir)NotifyLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>.\NotifyLib.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
@@ -80,19 +77,17 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Include\Common;..\CommonLib\Sqlite3;..\CommonLib\SqliteLib;..\CommonLib\DataBaseLib;..\CommonLib\DataObjectMapLib;..\CommonLib\FactoryLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>$(OutDir)DataObjectMapLib.lib;$(OutDir)DataBaseLib.lib;$(OutDir)ThreadPoolLib.lib;$(OutDir)Utill.lib;$(OutDir)Sqlite3.lib;$(OutDir)SqliteLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>.\NotifyLib.def</ModuleDefinitionFile>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
-      <ValidateAllParameters>true</ValidateAllParameters>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </Midl>
     <ResourceCompile>
@@ -102,58 +97,25 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="NotifyLib.def" />
     <None Include="ReadMe.txt" />
-    <None Include="res\App.ico" />
-    <None Include="res\App.rc2" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h" />
-    <ClInclude Include="AppDlg.h" />
-    <ClInclude Include="Resource.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="targetver.h" />
-    <ClInclude Include="TestContorller.h" />
-    <ClInclude Include="TestTable.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="App.cpp" />
-    <ClCompile Include="AppDlg.cpp" />
+    <ClCompile Include="NotifierManager.cpp" />
+    <ClCompile Include="NotifyObject.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TestContorller.cpp" />
-    <ClCompile Include="TestTable.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="App.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CommonLib\DataObjectMapLib\DataObjectMapLib.vcxproj">
-      <Project>{10a8299d-cbae-4c56-beda-6b15744b548b}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\CommonLib\FactoryLib\FactoryLib.vcxproj">
-      <Project>{c064328a-e347-4058-a59f-7e4174ed161f}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\CommonLib\NotifyLib\NotifyLib.vcxproj">
-      <Project>{79f1da74-6d90-479a-85d5-375ed706c816}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\CommonLib\SqliteLib\SqliteLib.vcxproj">
-      <Project>{d22ac681-8468-48ec-9ccd-f0f487d00b19}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\CommonLib\ThreadPoolLib\ThreadPoolLib.vcxproj">
-      <Project>{220e1f77-c2b1-4e88-97d6-f62e5775a8d5}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\CommonLib\Utill\Utill.vcxproj">
-      <Project>{b8e60038-4fb7-4bf8-ab73-a6dfcf6e058f}</Project>
-    </ProjectReference>
+    <ClInclude Include="NotifierManager.h" />
+    <ClInclude Include="NotifyObject.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <ProjectExtensions>
-    <VisualStudio>
-      <UserProperties RESOURCE_FILE="App.rc" />
-    </VisualStudio>
-  </ProjectExtensions>
 </Project>

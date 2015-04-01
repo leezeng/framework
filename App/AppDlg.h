@@ -18,7 +18,7 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
-
+	LRESULT OnNotifyThreadMsg(WPARAM wParam, LPARAM lParam);
 // Implementation
 protected:
 	HICON m_hIcon;
@@ -30,4 +30,6 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedOk();
+	afx_msg void OnBnClickedButton1();
+	HANDLE m_Event;
 };

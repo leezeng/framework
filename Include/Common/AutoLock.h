@@ -29,16 +29,16 @@ public:
 		CRITICAL_SECTION m_cs;
 	};
 public:
-	CAutoLock(CLock* lock):m_lock(lock){
-		  m_lock->Lock(); 
+	CAutoLock(CLock* lock):m_pLock(lock){
+		  m_pLock->Lock(); 
 	};
 	~CAutoLock()
 	{
-		  m_lock->Unlock();
-		  m_lock=nullptr;
+		  m_pLock->Unlock();
+		  m_pLock=nullptr;
 	};
 	 
 private:
-	CLock* m_lock;
+	CLock* m_pLock;
 };
 

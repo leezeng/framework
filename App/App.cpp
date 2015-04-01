@@ -5,7 +5,8 @@
 #include "stdafx.h"
 #include "App.h"
 #include "AppDlg.h"
-
+#include "Message.h"
+#include "NotifierManager.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -15,6 +16,7 @@
 
 BEGIN_MESSAGE_MAP(CAppApp, CWinApp)
 	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
+	ON_THREAD_MESSAGE(WM_NOTIFY_THREAD_MSG,&CAppApp::OnNotifyThreadMsg)
 END_MESSAGE_MAP()
 
 
@@ -34,6 +36,7 @@ CAppApp theApp;
 
 // CAppApp initialization
 
+#include "NotifierManager.h"
 BOOL CAppApp::InitInstance()
 {
 	CWinApp::InitInstance();
@@ -51,10 +54,14 @@ BOOL CAppApp::InitInstance()
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-
 	CAppDlg dlg;
 	m_pMainWnd = &dlg;
+	CNotifierManager* pManger=CNotifierManager::GetInstance();
+	pManger->SetWinApp(this);
 	INT_PTR nResponse = dlg.DoModal();
+	
+	
+
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is
@@ -71,9 +78,26 @@ BOOL CAppApp::InitInstance()
 	{
 		delete pShellManager;
 	}
-
+	
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.
 	return FALSE;
+}
+
+void CAppApp::OnNotifyThreadMsg( WPARAM wParam, LPARAM lParam )
+{
+	P_STHREAD_MESSAGE_PARAM pThreadMsgParam=(P_STHREAD_MESSAGE_PARAM)lParam;
+	if (nullptr==pThreadMsgParam)
+	{
+		return;
+	}
+	bool bFlag=CNotifierManager::GetInstance()->SetNotifyObjState(pThreadMsgParam->pNotifyObj,E_DOING);
+	if (bFlag&&pThreadMsgParam->pNotifyObj)
+	{
+		pThreadMsgParam->pNotifyObj->ProcessNotify(pThreadMsgParam->nMsgId,pThreadMsgParam->wParam,pThreadMsgParam->lParam);
+		bool bFlag=CNotifierManager::GetInstance()->SetNotifyObjState(pThreadMsgParam->pNotifyObj,E_IDLE);
+	}
+	delete pThreadMsgParam;
+	pThreadMsgParam=nullptr;
 }
 

@@ -1,0 +1,5 @@
+#pragma once
+#define WM_USER_DEFINED_MSG		WM_USER+0x0001
+
+#define WM_NOTIFY_THREAD_MSG WM_USER+99
+#define WM_TEST_MSG WM_USER+100

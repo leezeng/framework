@@ -6,7 +6,7 @@
 #include "App.h"
 #include "AppDlg.h"
 #include "afxdialogex.h"
-
+#include "Message.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -21,6 +21,7 @@ CAppDlg::CAppDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CAppDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_Event=CreateEvent(NULL,FALSE,FALSE,NULL);
 }
 
 void CAppDlg::DoDataExchange(CDataExchange* pDX)
@@ -32,7 +33,32 @@ BEGIN_MESSAGE_MAP(CAppDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDOK, &CAppDlg::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON1, &CAppDlg::OnBnClickedButton1)
+	ON_MESSAGE(WM_NOTIFY_THREAD_MSG,&CAppDlg::OnNotifyThreadMsg)
 END_MESSAGE_MAP()
+
+
+#include "Message.h"
+#include "NotifierManager.h"
+#include "NotifyObject.h"
+#include "TestContorller.h"
+LRESULT CAppDlg::OnNotifyThreadMsg( WPARAM wParam, LPARAM lParam )
+{
+	P_STHREAD_MESSAGE_PARAM pThreadMsgParam=(P_STHREAD_MESSAGE_PARAM)lParam;
+	if (nullptr==pThreadMsgParam)
+	{
+		return FALSE;
+	}
+	bool bFlag=CNotifierManager::GetInstance()->SetNotifyObjState(pThreadMsgParam->pNotifyObj,E_DOING);
+	if (bFlag&&pThreadMsgParam->pNotifyObj)
+	{
+		pThreadMsgParam->pNotifyObj->ProcessNotify(pThreadMsgParam->nMsgId,pThreadMsgParam->wParam,pThreadMsgParam->lParam);
+		bool bFlag=CNotifierManager::GetInstance()->SetNotifyObjState(pThreadMsgParam->pNotifyObj,E_IDLE);
+	}
+	delete pThreadMsgParam;
+	pThreadMsgParam=nullptr;
+	return TRUE;
+}
 
 
 // CAppDlg message handlers
@@ -108,5 +134,29 @@ void CAppDlg::OnBnClickedOk()
 	CTestTable testTable;
 	testTable.SetOperatorType(DB_SELECT);
 	sqlOperation.ExecteSqlByPrimaryKey(&testTable);
+
+}
+
+static unsigned __stdcall ThreadFunc( void* param )
+{
+	CAppDlg* pThreadPool=(CAppDlg*)(param);
+	if (NULL!=pThreadPool)
+	{
+		CNotifierManager::GetInstance()->BoardCastMessage(WM_TEST_MSG,NULL,NULL,false,0);
+	    WaitForSingleObject(pThreadPool->m_Event,100000);
+	}
+	return FALSE;
+}
+CTestContorller contorll;
+void CAppDlg::OnBnClickedButton1()
+{
+		
+	contorll.InitMessageMap();
+
+	//CNotifierManager::GetInstance()->BoardCastMessage(WM_TEST_MSG,NULL,NULL,false,0);
+	// TODO: Add your control notification handler code here
+	unsigned int nThreadId;
+	//CreateThread(NULL,0,)
+	HANDLE hHandle=(HANDLE)_beginthreadex(NULL,0,ThreadFunc,(void*)this,0,&nThreadId);
 
 }

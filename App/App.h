@@ -10,7 +10,6 @@
 
 #include "resource.h"		// main symbols
 
-
 // CAppApp:
 // See App.cpp for the implementation of this class
 //
@@ -23,7 +22,8 @@ public:
 // Overrides
 public:
 	virtual BOOL InitInstance();
-
+private:
+	void OnNotifyThreadMsg(WPARAM wParam, LPARAM lParam);
 // Implementation
 
 	DECLARE_MESSAGE_MAP()
