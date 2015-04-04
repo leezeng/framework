@@ -7,6 +7,7 @@
 #include "AppDlg.h"
 #include "Message.h"
 #include "NotifierManager.h"
+#include "DriveManager.h"
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -58,6 +59,8 @@ BOOL CAppApp::InitInstance()
 	m_pMainWnd = &dlg;
 	CNotifierManager* pManger=CNotifierManager::GetInstance();
 	pManger->SetWinApp(this);
+	CDriveManager* pDriverManager=CDriveManager::GetInstance();
+	pDriverManager->InitializeDeviceDriver();
 	INT_PTR nResponse = dlg.DoModal();
 	
 	

@@ -35,6 +35,7 @@ BEGIN_MESSAGE_MAP(CAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDOK, &CAppDlg::OnBnClickedOk)
 	ON_BN_CLICKED(IDC_BUTTON1, &CAppDlg::OnBnClickedButton1)
 	ON_MESSAGE(WM_NOTIFY_THREAD_MSG,&CAppDlg::OnNotifyThreadMsg)
+	ON_BN_CLICKED(IDC_BUTTON2, &CAppDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -142,21 +143,83 @@ static unsigned __stdcall ThreadFunc( void* param )
 	CAppDlg* pThreadPool=(CAppDlg*)(param);
 	if (NULL!=pThreadPool)
 	{
+		//contorll.InitMessageMap();
 		CNotifierManager::GetInstance()->BoardCastMessage(WM_TEST_MSG,NULL,NULL,false,0);
 	    WaitForSingleObject(pThreadPool->m_Event,100000);
 	}
 	return FALSE;
 }
-CTestContorller contorll;
+
+static unsigned __stdcall ThreadFunc2( void* param )
+{
+	CTestContorller contorll;
+	CAppDlg* pThreadPool=(CAppDlg*)(param);
+	if (NULL!=pThreadPool)
+	{
+		contorll.InitMessageMap();
+		MSG msg;
+		while (true)
+		{
+			GetMessage(&msg,NULL,0,0);
+			switch(msg.message)
+			{
+			case WM_TEST_MSG:
+				{
+					AfxOutputDebugString("test msg");
+				}
+			case WM_NOTIFY_THREAD_MSG:
+				{
+					AfxOutputDebugString("notify thread msg");
+				}
+				break;
+			}
+		}
+		//CNotifierManager::GetInstance()->BoardCastMessage(WM_TEST_MSG,NULL,NULL,false,0);
+		//WaitForSingleObject(pThreadPool->m_Event,100000);
+	}
+	return FALSE;
+}
+
 void CAppDlg::OnBnClickedButton1()
 {
-		
-	contorll.InitMessageMap();
-
-	//CNotifierManager::GetInstance()->BoardCastMessage(WM_TEST_MSG,NULL,NULL,false,0);
 	// TODO: Add your control notification handler code here
 	unsigned int nThreadId;
-	//CreateThread(NULL,0,)
+	HANDLE hHandle2=(HANDLE)_beginthreadex(NULL,0,ThreadFunc2,(void*)this,0,&nThreadId);
+	Sleep(1000);
 	HANDLE hHandle=(HANDLE)_beginthreadex(NULL,0,ThreadFunc,(void*)this,0,&nThreadId);
-
+}
+class __declspec(dllexport) CJob
+{
+public:
+	CJob(unsigned int uMsgId):m_uMsgId(uMsgId){}
+	virtual ~CJob(){}
+private:
+	unsigned int m_uMsgId;
+};
+#include "Queue.h"
+#include "ThreadJobData.h"
+void CAppDlg::OnBnClickedButton2()
+{
+	CQueue<CThreadJobData*>* pQueue=new CQueue<CThreadJobData*>;
+	pQueue->enqueue(new CThreadJobData(WM_JOB_1_MSG));
+	pQueue->enqueue(new CThreadJobData(WM_JOB_2_MSG));
+	pQueue->enqueue(new CThreadJobData(WM_JOB_3_MSG));
+	pQueue->enqueue(new CThreadJobData(WM_JOB_4_MSG));
+	pQueue->enqueue(new CThreadJobData(WM_JOB_5_MSG));
+	//pQueue->enqueue(new CJob(2));
+	//pQueue->enqueue(new CJob(3));
+	//pQueue->enqueue(new CJob(4));
+	//pQueue->enqueue(new CJob(5));
+	//int nLength=pQueue->length();
+	//pQueue->clear();
+	//CJob* pJobRef=nullptr;/*
+	//pQueue->dequeue(pJobRef);
+	//pQueue->dequeue(pJobRef);
+	//pQueue->dequeue(pJobRef);*/
+	//int nLength2=pQueue->length();
+	/*pQueue->dequeue(pJobRef);
+	pQueue->dequeue(pJobRef);
+	pQueue->dequeue(pJobRef);*//*
+	int nLength3=pQueue->length();*/
+	// TODO: Add your control notification handler code here
 }

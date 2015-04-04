@@ -1,5 +1,17 @@
 #pragma once
 #define WM_USER_DEFINED_MSG		WM_USER+0x0001
 
+
+#define WM_DEVICE_NOTIFY 0x500
+
 #define WM_NOTIFY_THREAD_MSG WM_USER+99
 #define WM_TEST_MSG WM_USER+100
+
+
+#define WM_JOB_1_MSG WM_USER+101
+#define WM_JOB_2_MSG WM_USER+102
+#define WM_JOB_3_MSG WM_USER+103
+#define WM_JOB_4_MSG WM_USER+104
+#define WM_JOB_5_MSG WM_USER+105
+
+ 

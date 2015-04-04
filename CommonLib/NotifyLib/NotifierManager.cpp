@@ -290,15 +290,17 @@ LRESULT CNotifierManager::BoardCastMessage( unsigned int uMsgId,WPARAM wParam,LP
 								pThreadMsgParam->nMsgId=uMsgId;
 								pThreadMsgParam->wParam=wParam;
 								pThreadMsgParam->lParam=lParam;
-								if (m_pMainApp&&sNotifyMsg.uThreadId==m_pMainApp->m_nThreadID)//如果当前NotifyMsg的线程ID为.
+								if (m_pMainApp&&sNotifyMsg.uThreadId==m_pMainApp->m_nThreadID)//如果当前NotifyMsg的线程ID为.主窗口的线程ID.即改为往主窗口post消息。
+																							 //当该CNotifyObject对象是在主窗口中被创建。notifytarget的线程id为主窗口的线程id。其他线程中创建，即其他线程的ID。
 								{
 									if (m_pMainApp->m_pMainWnd)
 									{
 										bool bRet=false;
 										for (int j=0;j<5;j++)
+
 										{
-											//if (::PostMessage(m_pMainApp->m_pMainWnd->GetSafeHwnd(), WM_NOTIFY_THREAD_MSG,wParam,(LPARAM)pThreadMsgParam))
-											if(::PostThreadMessage(sNotifyMsg.uThreadId,WM_NOTIFY_THREAD_MSG,wParam,(LPARAM)pThreadMsgParam))
+											if (::PostMessage(m_pMainApp->m_pMainWnd->GetSafeHwnd(), WM_NOTIFY_THREAD_MSG,wParam,(LPARAM)pThreadMsgParam))
+											//if(::PostThreadMessage(sNotifyMsg.uThreadId,WM_NOTIFY_THREAD_MSG,wParam,(LPARAM)pThreadMsgParam))
 											{
 												bRet = true;
 												break;

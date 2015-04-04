@@ -3,7 +3,7 @@
 class __declspec(dllexport) CDataObject:public CFactoryObject
 {
 public:
-	DECLARE_FACTORYCLASS(CDataObject)
+	//DECLARE_FACTORYCLASS(CDataObject)
 	CDataObject(bool bAddToObjMap=true);
 	virtual ~CDataObject(void);
 private:

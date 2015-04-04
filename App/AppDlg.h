@@ -32,4 +32,5 @@ public:
 	afx_msg void OnBnClickedOk();
 	afx_msg void OnBnClickedButton1();
 	HANDLE m_Event;
+	afx_msg void OnBnClickedButton2();
 };

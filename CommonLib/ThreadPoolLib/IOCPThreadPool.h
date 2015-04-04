@@ -15,7 +15,7 @@ public:
 	void Exit();
 	BOOL IsThreadPoolAlive();
 protected:
-	static friend unsigned __stdcall ThreadFunc(void* param);
+	static friend unsigned int __stdcall ThreadFunc(void* param);
 	BOOL ThreadProc();
 private:
 	HRESULT InternalInitializePool(DWORD dwNum);

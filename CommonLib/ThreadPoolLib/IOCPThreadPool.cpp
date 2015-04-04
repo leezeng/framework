@@ -1,15 +1,15 @@
 #include "StdAfx.h"
 #include "IOCPThreadPool.h"
 #include "Woker.h"
-static unsigned __stdcall ThreadFunc( void* param )
+static unsigned int __stdcall ThreadFunc( void* param )
 {
 	CIOCPThreadPool* pThreadPool=(CIOCPThreadPool*)(param);
 	if (NULL!=pThreadPool)
 	{
 		pThreadPool->ThreadProc();
-		return TRUE;
+		return 1;
 	}
-	return FALSE;
+	return 0;
 }
 
 CIOCPThreadPool::CIOCPThreadPool(void):m_dwCurrentExitThreadId(0)
