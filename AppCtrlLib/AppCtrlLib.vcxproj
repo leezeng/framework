@@ -119,7 +119,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="AppCtrlLib.rc" />
+    <ProjectReference Include="..\DriveLib\DriveLib.vcxproj">
+      <Project>{4f5c2d6d-61d7-40ea-8814-ae5ad74fd379}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

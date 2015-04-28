@@ -34,5 +34,5 @@ bool CAppCtrl::Receive( E_MACHINE_STATE eState )
 void CAppCtrl::Initialize()
 {
 	CDriveManager* pDriveManager=CDriveManager::GetInstance();
-	pDriveManager->InitializeDeviceDriver(this);
+	pDriveManager->InitializeDeviceDriver();
 }

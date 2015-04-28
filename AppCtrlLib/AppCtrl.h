@@ -1,4 +1,5 @@
 #pragma once
+#include "Defined.h"
 #include "Listener.h"
 class __declspec(dllexport) CAppCtrl:public CListener
 {
