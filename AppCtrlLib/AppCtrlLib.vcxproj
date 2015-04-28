@@ -114,8 +114,12 @@
     <ClInclude Include="AppCtrl.h" />
     <ClInclude Include="AppCtrlController.h" />
     <ClInclude Include="AppCtrlManager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AppCtrlLib.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -55,12 +55,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Include\Common;..\CommonLib\Sqlite;..\CommonLib\SqliteLib;..\CommonLib\DataBaseLib;..\CommonLib\DataObjectMapLib;..\CommonLib\FactoryLib;..\CommonLib\Utill;..\CommonLib\NotifyLib;..\CommonLib\ThreadLib;..\DriveLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Include\Common;..\CommonLib\Sqlite;..\CommonLib\SqliteLib;..\CommonLib\DataBaseLib;..\CommonLib\DataObjectMapLib;..\CommonLib\FactoryLib;..\CommonLib\Utill;..\CommonLib\NotifyLib;..\CommonLib\ThreadLib;..\DriveLib;..\AppCtrlLib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>$(OutDir)DataObjectMapLib.lib;$(OutDir)DataBaseLib.lib;$(OutDir)ThreadPoolLib.lib;$(OutDir)Utill.lib;$(OutDir)Sqlite.lib;$(OutDir)SqliteLib.lib;$(OutDir)NotifyLib.lib;$(OutDir)ThreadLib.lib;$(OutDir)DriveLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(OutDir)DataObjectMapLib.lib;$(OutDir)DataBaseLib.lib;$(OutDir)ThreadPoolLib.lib;$(OutDir)Utill.lib;$(OutDir)Sqlite.lib;$(OutDir)SqliteLib.lib;$(OutDir)NotifyLib.lib;$(OutDir)ThreadLib.lib;$(OutDir)DriveLib.lib;$(OutDir)AppCtrlLib.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -129,6 +129,9 @@
     <ResourceCompile Include="App.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AppCtrlLib\AppCtrlLib.vcxproj">
+      <Project>{782300f4-9e0b-40fb-bd08-2c71e9f5b56a}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\CommonLib\DataObjectMapLib\DataObjectMapLib.vcxproj">
       <Project>{10a8299d-cbae-4c56-beda-6b15744b548b}</Project>
     </ProjectReference>
